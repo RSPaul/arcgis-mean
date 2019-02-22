@@ -1,0 +1,9 @@
+{
+  "callbackUrl": "http://localhost:3000/auth/callback",
+  "userInfoUrl": "https://www.arcgis.com/sharing/rest/oauth2/token",
+  "userInfoNameField": "username",
+  "implicitGrantUrl": "https://www.arcgis.com/sharing/rest/oauth2/authorize?redirect_uri=__callbackUrl__&response_type=code&client_id=__clientId__",
+  "clientId": "prf8U4tYROV8qvZ5",
+  "clientSecret": "84e042bdae0e4ac88e9923ca250a9978",
+  "scopes": "https://www.googleapis.com/auth/userinfo.profile"
+}
