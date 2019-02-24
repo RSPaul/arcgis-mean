@@ -29,9 +29,9 @@ export class ItemService {
 
     }
 
-    addTags(userName, itemId, tags, token) : Observable<any> {
+    addTags(postData) : Observable<any> {
 
-    	return this.http.post(this.baseUrl + '/sharing/rest/content/users/'+ userName +'/items/'+ itemId +'/update'+'?token=' + token + '&f=json&tags=' + tags)
+    	return this.http.post(this.baseUrl + '/sharing/rest/content/users/'+ postData.user +'/items/'+ postData.itemId +'/update'+'?token=' + postData.token + '&f=json&tags=' + postData.tags)
                          .map((res:Response) => res.json())
                          .catch((error:any) => Observable.throw(error || 'Server error'));
     }

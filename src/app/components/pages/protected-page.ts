@@ -72,7 +72,7 @@ import {Router} from "@angular/router";
 	          		</select>
 	          	</div>
 	          	<div class="form-group">
-	          		<label>Enter Tags</label>
+	          		<label>Enter Tags<span> (use spaces between words to enter multiple tags)</span></label>
 	          		<input type="text" name="tags" id="updatedTags" class="form-control"  ([ngModel])="updatedTags">
 	          	</div>
 	          	
@@ -112,7 +112,7 @@ export class ProtectedPage {
     }
 
     getItems() {
-
+    	this.updatedTags = '';
     	this.itemService.getItems(this.userName, this.userToken).subscribe((response) => {
     		this.items = response.items;
     		this.selectedItem = (this.items) ? this.items[0] : '';
@@ -130,7 +130,8 @@ export class ProtectedPage {
     addTags() {
 
     	this.submitText = 'Please Wait..';
-    	this.itemService.addTags(this.userName, $('#selectedItem').val(), $('#updatedTags').val(), this.userToken).subscribe((response) => {
+    	let postData = {user: this.userName, itemId: $('#selectedItem').val(), tags: $('#updatedTags').val(), token: this.userToken};
+    	this.itemService.addTags(postData).subscribe((response) => {
     		this.submitText = 'Submit';
     		if(response && response.success) {
     			this.isSuccess = true;
@@ -144,6 +145,7 @@ export class ProtectedPage {
     changeItem(event: any) {
     	
     	let currentItem = $('#selectedItem').val();
+    	this.selectedItem = currentItem;
     	this.items.map(item => {
     		if(item.id === currentItem) {
     			this.updatedTags = '';
