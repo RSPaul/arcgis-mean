@@ -13,6 +13,7 @@ import {HttpModule} from "@angular/http";
 import {ProtectedDirective} from "./directives/protected.directive";
 import {Navbar} from "./components/navbar/navbar";
 
+
 const routes: Routes = [
     {path: 'public', pathMatch: 'full', component: PublicPage},
     {path: 'protected', pathMatch: 'full', component: ProtectedPage},

@@ -108,7 +108,9 @@ export class AuthService {
         this.expires = 0;
         this.token = null;
         this.emitAuthStatus(true);
-        console.log('Session has been cleared');
+        localStorage.setItem('login', '');
+        localStorage.setItem('userInfo', '');
+        localStorage.setItem('userToken', '');
     }
 
     private emitAuthStatus(success: boolean) {
@@ -138,6 +140,9 @@ export class AuthService {
                 .map(res => res.json())
                 .subscribe(info => {
                     this.userInfo = info;
+                    localStorage.setItem('login', 'true');
+                    localStorage.setItem('userInfo', info.username);
+                    localStorage.setItem('userToken', info.access_token);
                 }, err => {
                     console.error("Failed to fetch user info:", err);
                 });
@@ -149,7 +154,11 @@ export class AuthService {
     }
 
     public getUserName() {
-        return this.userInfo ? this.userInfo[this.oAuthUserNameField] : null;
+        return localStorage.getItem('userInfo') ? localStorage.getItem('userInfo') : null;
+    }
+
+    public getUserToken() {
+        return localStorage.getItem('userToken') ? localStorage.getItem('userToken') : null;
     }
 
     private startExpiresTimer(seconds: number) {
@@ -168,7 +177,15 @@ export class AuthService {
     }
 
     public isAuthenticated() {
-        return this.authenticated;
+        let isLoggedIn = localStorage.getItem('login');
+        if(isLoggedIn == 'true') {
+            this.authenticated = true;
+            return true;    
+        } else {
+            this.authenticated = false;
+            return false;    
+        }
+        
     }
 
     private parse(str) { // lifted from https://github.com/sindresorhus/query-string

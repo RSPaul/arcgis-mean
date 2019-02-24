@@ -1,0 +1,28 @@
+
+<div class="pos-f-t">
+    <navbar></navbar>
+</div>
+<div protected><div class="container">
+  <h2>My Items</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>S. No.</th>
+        <th>Title</th>
+        <th>Access</th>
+        <th>Type</th>
+        <th>Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items; let i = index">
+        <td>{{i+1}}</td>
+        <td>{{item.title}}</td>
+        <td>{{item.access}}</td>
+        <td>{{item.type}}</td>
+        <td>{{item.tags}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
