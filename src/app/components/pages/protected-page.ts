@@ -7,6 +7,9 @@
 import {Component} from "@angular/core";
 import {ItemService} from "../../services/items.service";
 import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
+// import * as jquery from 'jquery';
+
 
 @Component({
     selector: 'protected-page',
@@ -62,7 +65,7 @@ import {AuthService} from "../../services/auth.service";
 	          
 	          	<div class="form-group">
 	          		<label>Select Item</label>
-	          		<select name="item" class="form-control" (change)="changeItem($event)" ([ngModel])="selectedItem">
+	          		<select name="item" class="form-control" id="selectedItem" (change)="changeItem($event)" ([ngModel])="selectedItem">
 	          			<option *ngFor="let item of items" value="{{item.id}}">
 	          				{{item.title}}
 	          			</option>
@@ -70,14 +73,14 @@ import {AuthService} from "../../services/auth.service";
 	          	</div>
 	          	<div class="form-group">
 	          		<label>Enter Tags</label>
-	          		<input type="text" name="tags" class="form-control"  ([ngModel])="updatedTags">
+	          		<input type="text" name="tags" id="updatedTags" class="form-control"  ([ngModel])="updatedTags">
 	          	</div>
 	          	
 	        
 	        </div>
 	        <div class="modal-footer">
 	        	<button type="button" name="submit" class="btn btn-success" (click)="addTags()">{{submitText}}</button>
-	          	<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	          	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	        </div>
 	      </div>
      </form>
@@ -92,13 +95,12 @@ export class ProtectedPage {
     items: any;
     userToken: string;
     selectedItem: any;
-    tags: string = '';
-    updatedTags: any;
+    updatedTags: any = '';
     submitText: string = 'Submit';
     isSuccess: boolean = false;
     isError: boolean = false;
 
-    constructor(private itemService: ItemService, private authService: AuthService) {
+    constructor(private itemService: ItemService, private authService: AuthService, private router: Router) {
     	
     	this.userName = this.authService.getUserName();
     	this.userToken = this.authService.getUserToken();
@@ -114,17 +116,22 @@ export class ProtectedPage {
     	this.itemService.getItems(this.userName, this.userToken).subscribe((response) => {
     		this.items = response.items;
     		this.selectedItem = (this.items) ? this.items[0] : '';
-    		this.selectedItem.tags.map(title => {
-    			this.updatedTags = this.tags + title + ' ';
-    		});
+    		if(this.selectedItem) {
+	    		this.selectedItem.tags.map(title => {
+	    			this.updatedTags = this.updatedTags + title + ' ';
+	    		});
+	    		$('#updatedTags').val(this.updatedTags);
+	    	} else {
+	    		this.router.navigate(['/loggedout']);
+	    	}
     	});
     }
 
     addTags() {
+
     	this.submitText = 'Please Wait..';
-    	this.itemService.addTags(this.userName, this.selectedItem.id, this.tags, this.userToken).subscribe((response) => {
+    	this.itemService.addTags(this.userName, $('#selectedItem').val(), $('#updatedTags').val(), this.userToken).subscribe((response) => {
     		this.submitText = 'Submit';
-    		console.log('add response ', response);
     		if(response && response.success) {
     			this.isSuccess = true;
     			this.getItems();
@@ -135,7 +142,17 @@ export class ProtectedPage {
     }
 
     changeItem(event: any) {
-    	console.log('drop donw is changed', this.selectedItem);
+    	
+    	let currentItem = $('#selectedItem').val();
+    	this.items.map(item => {
+    		if(item.id === currentItem) {
+    			this.updatedTags = '';
+    			item.tags.map(i => {
+    				this.updatedTags = this.updatedTags + i + ' ';
+    			});
+    			$('#updatedTags').val(this.updatedTags);
+    		}
+    	});
     }
 
 }
