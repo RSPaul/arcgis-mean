@@ -8,7 +8,6 @@
   "scripts": {
     "start": "webpack-dev-server --progress --colors --content-base src --display-cached --display-error-details --inline",
     "heroku-prebuild": "npm install --dev",
-    "postinstall": "cd client && npm install"
   },
   "dependencies": {
     "@angular/common": "2.0.0-rc.5",
