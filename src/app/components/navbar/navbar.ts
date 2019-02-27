@@ -20,7 +20,7 @@ import {AuthService} from "../../services/auth.service";
                 </li>
                 <li class="nav-item">
                 <!-- @TODO: put disabled button back in instead of anchor: [disabled]="!authenticated"-->
-                    <a [routerLinkActive]="['active']" [routerLink]="['/protected']" class="nav-link btn btn-success-outline">Items</a>
+                    <a [routerLinkActive]="['active']" [routerLink]="['/items']" class="nav-link btn btn-success-outline">Items</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav pull-xs-right">

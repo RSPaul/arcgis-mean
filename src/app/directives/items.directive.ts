@@ -4,10 +4,10 @@ import {Router} from "@angular/router";
 import {Location} from "@angular/common";
 
 @Directive({
-    selector: '[protected]'
+    selector: '[items]'
 })
 
-export class ProtectedDirective implements OnDestroy {
+export class itemsDirective implements OnDestroy {
     private sub: any = null;
 
     constructor(private authService: AuthService, private router: Router, private location: Location) {

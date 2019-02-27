@@ -4,15 +4,16 @@
  * Date: 12/18/15
  * Time: 9:56 AM
  */
-import {Component} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {ItemService} from "../../services/items.service";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
-// import * as jquery from 'jquery';
+import { FormGroup, NgModel,  FormBuilder, Validators } from '@angular/forms';
+// import * as $ from 'jquery';
 
 
 @Component({
-    selector: 'protected-page',
+    selector: 'items-page',
     directives: [],
     pipes: [],
     providers: [ItemService, AuthService],
@@ -20,7 +21,7 @@ import {Router} from "@angular/router";
 <div class="pos-f-t">
     <navbar></navbar>
 </div>
-<div protected><div class="container">
+<div items><div class="container">
   <div class="col-md-12"><div class="col-md-6"><h3>My Items</h3> </div><div class="col-md-6 pull-right"><div class="col-md-3"></div><div class="col-md-3"></div><div class="col-md-3"></div><button (click)="isSuccess = false; isError = false;" type="button" class="btn btn-success" data-toggle="modal" data-target="#tagsModal">Add Tags</button></div></div><div><div class="clearfix"></div>
   <table class="table table-bordered">
     <thead>
@@ -42,7 +43,7 @@ import {Router} from "@angular/router";
       </tr>
     </tbody>
   </table>
-  <div class="loading text-center" *ngIf="!items">Loading...</div>
+  <div class="loading text-center" *ngIf="!items">{{loadText}}</div>
 </div>
 <div class="modal fade" id="tagsModal" role="dialog">
     <div class="modal-dialog">
@@ -65,7 +66,7 @@ import {Router} from "@angular/router";
 	          
 	          	<div class="form-group">
 	          		<label>Select Item</label>
-	          		<select name="item" class="form-control" id="selectedItem" (change)="changeItem($event)" ([ngModel])="selectedItem">
+	          		<select name="item" class="form-control" id="selectedItem" (change)="changeItem($event.target.value)" [(ngModel)]="selectedItem">
 	          			<option *ngFor="let item of items" value="{{item.id}}">
 	          				{{item.title}}
 	          			</option>
@@ -73,7 +74,7 @@ import {Router} from "@angular/router";
 	          	</div>
 	          	<div class="form-group">
 	          		<label>Enter Tags<span> (use spaces between words to enter multiple tags)</span></label>
-	          		<input type="text" name="tags" id="updatedTags" class="form-control"  ([ngModel])="updatedTags">
+	          		<input type="text" name="tags" id="updatedTags" class="form-control"  [(ngModel)]="updatedTags">
 	          	</div>
 	          	
 	        
@@ -89,13 +90,14 @@ import {Router} from "@angular/router";
 </div>
 `
 })
-export class ProtectedPage {
+export class itemsPage {
     
     userName: string;
     items: any;
     userToken: string;
     selectedItem: any;
     updatedTags: any = '';
+    loadText: string = 'Loading...';
     submitText: string = 'Submit';
     isSuccess: boolean = false;
     isError: boolean = false;
@@ -115,13 +117,13 @@ export class ProtectedPage {
     	this.updatedTags = '';
     	this.itemService.getItems(this.userName, this.userToken).subscribe((response) => {
     		this.items = response.items;
-    		this.selectedItem = (this.items) ? this.items[0] : '';
+    		this.selectedItem = (this.items) ? this.items[0].id : '';
     		if(this.selectedItem) {
-	    		this.selectedItem.tags.map(title => {
+	    		this.items[0].tags.map(title => {
 	    			this.updatedTags = this.updatedTags + title + ' ';
 	    		});
-	    		$('#updatedTags').val(this.updatedTags);
 	    	} else {
+                this.loadText = 'You token is expired, please logout and login again to continue.'
 	    		this.router.navigate(['/loggedout']);
 	    	}
     	});
@@ -130,7 +132,7 @@ export class ProtectedPage {
     addTags() {
 
     	this.submitText = 'Please Wait..';
-    	let postData = {user: this.userName, itemId: $('#selectedItem').val(), tags: $('#updatedTags').val(), token: this.userToken};
+    	let postData = {user: this.userName, itemId: this.selectedItem, tags: this.updatedTags, token: this.userToken};
     	this.itemService.addTags(postData).subscribe((response) => {
     		this.submitText = 'Submit';
     		if(response && response.success) {
@@ -142,17 +144,14 @@ export class ProtectedPage {
     	});
     }
 
-    changeItem(event: any) {
-    	
-    	let currentItem = $('#selectedItem').val();
-    	this.selectedItem = currentItem;
+    changeItem(value: string) {
+
     	this.items.map(item => {
-    		if(item.id === currentItem) {
+   		if(item.id === value) {
     			this.updatedTags = '';
     			item.tags.map(i => {
     				this.updatedTags = this.updatedTags + i + ' ';
     			});
-    			$('#updatedTags').val(this.updatedTags);
     		}
     	});
     }

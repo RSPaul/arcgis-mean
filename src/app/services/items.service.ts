@@ -21,7 +21,7 @@ export class ItemService {
     }
 
 
-    getItems(userName, token) : Observable<any> {
+    getItems(userName: string, token: string) : Observable<any> {
 
         return this.http.get(this.baseUrl + '/sharing/rest/content/users/' + userName + '?token=' + token + '&f=json')
                          .map((res:Response) => res.json())
@@ -29,7 +29,7 @@ export class ItemService {
 
     }
 
-    addTags(postData) : Observable<any> {
+    addTags(postData: any) : Observable<any> {
 
     	return this.http.post(this.baseUrl + '/sharing/rest/content/users/'+ postData.user +'/items/'+ postData.itemId +'/update'+'?token=' + postData.token + '&f=json&tags=' + postData.tags)
                          .map((res:Response) => res.json())
