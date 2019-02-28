@@ -6,8 +6,7 @@
   "repository": "https://github.com/michaeloryl/angular2-bootstrap4-oauth2-webpack.git",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --progress --colors --content-base src --display-cached --display-error-details --inline",
-    "heroku-prebuild": "npm install --dev",
+    "start": "webpack-dev-server --progress --colors --content-base src --port 3000 --display-cached --display-error-details --inline"
   },
   "dependencies": {
     "@angular/common": "2.0.0-rc.5",
